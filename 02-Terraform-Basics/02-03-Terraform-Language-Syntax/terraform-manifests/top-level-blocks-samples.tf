@@ -1,18 +1,18 @@
 #####################################################################
 # Block-1: Terraform Settings Block
 terraform {
-  required_version = "~> 0.14"
+  required_version = "~> 1.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
   # Adding Backend as S3 for Remote State Storage with State Locking
   backend "s3" {
     bucket = "terraform-stacksimplify"
     key    = "dev2/terraform.tfstate"
-    region = "us-east-1"  
+    region = "eu-west-1"  
 
     # For State Locking
     dynamodb_table = "terraform-dev-state-table"
@@ -22,12 +22,12 @@ terraform {
 # Block-2: Provider Block
 provider "aws" {
   profile = "default" # AWS Credentials Profile configured on your local desktop terminal  $HOME/.aws/credentials
-  region  = "us-east-1"
+  region  = "eu-west-1"
 }
 #####################################################################
 # Block-3: Resource Block
 resource "aws_instance" "ec2demo" {
-  ami           = "ami-04d29b6f966df1537" # Amazon Linux
+  ami           = "ami-0c1bc246476a5572b" # Amazon Linux
   instance_type = var.instance_type
 }
 #####################################################################
@@ -90,10 +90,10 @@ module "ec2_cluster" {
 
   ami                    = data.aws_ami.amzlinux.id
   instance_type          = "t2.micro"
-  key_name               = "terraform-key"
+  key_name               = "tf"
   monitoring             = true
-  vpc_security_group_ids = ["sg-08b25c5a5bf489ffa"]  # Get Default VPC Security Group ID and replace
-  subnet_id              = "subnet-4ee95470" # Get one public subnet id from default vpc and replace
+  vpc_security_group_ids = ["sg-0f4206c9c95865c46"]  # Get Default VPC Security Group ID and replace
+  subnet_id              = "subnet-0c37e3d939bbb4500" # Get one public subnet id from default vpc and replace
   user_data               = file("apache-install.sh")
 
   tags = {
